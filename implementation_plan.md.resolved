@@ -1,0 +1,38 @@
+# Thay đổi dự án hiện tại thành Dự án Vườn Thông Minh (Smart Garden)
+
+Dự án hiện tại trong thư mục `IOT` là trạm cấp phát thuốc. Dựa trên yêu cầu của bạn, tôi sẽ thiết kế lại toàn bộ để trở thành **Hệ thống tưới cây thông minh** như mô phỏng HTML vừa rồi.
+
+## Các thay đổi đề xuất
+
+### 1. Phần cứng mô phỏng trên Wokwi (`diagram.json`)
+Sử dụng vi điều khiển **ESP32** và các linh kiện sau:
+- **Cảm biến nhiệt độ & độ ẩm DHT22**: Đo môi trường.
+- **Biến trở 1 (Potentiometer)**: Giả lập cảm biến độ ẩm đất (0-100%).
+- **Biến trở 2 (Potentiometer)**: Giả lập cảm biến mực nước trong bồn (0-100%).
+- **Cảm biến ánh sáng (Photoresistor / LDR)**: Giả lập việc đo cường độ ánh sáng.
+- **LED Xanh dương (Blue LED)**: Đại diện cho Máy Bơm Nước.
+- **LED Vàng (Yellow LED)**: Đại diện cho Đèn LED Quang Hợp (Grow Light).
+- **Màn hình LCD 16x2 (I2C)**: Hiển thị các thông số theo thời gian thực.
+
+### 2. Thư viện cài đặt (`platformio.ini`)
+- Xóa bỏ các thư viện cũ không dùng: `ESP32Servo`, `AccelStepper`, `HX711`.
+- Giữ lại: `marcoschwartz/LiquidCrystal_I2C@^1.1.4`.
+- Thêm thư viện: `adafruit/DHT sensor library` và `adafruit/Adafruit Unified Sensor`.
+
+### 3. Logic điều khiển (`src/main.cpp`)
+Chương trình C++ cho ESP32 sẽ được viết lại hoàn toàn để xử lý các logic sau:
+- **Chu kỳ đọc**: Đọc các cảm biến (Analog và DHT) mỗi 2 giây.
+- **Điều khiển Bơm**: 
+  - Đất < 40% & Mực nước > 10% -> Bật Bơm (Bật LED Xanh dương).
+  - Đất > 70% hoặc Mực nước <= 10% -> Tắt Bơm.
+- **Điều khiển Đèn**:
+  - Ánh sáng yếu -> Bật LED Quang Hợp.
+- **Hiển thị LCD**: Luân phiên hiển thị 2 màn hình (Môi trường & Trạng thái thiết bị).
+- **Cảnh báo qua Serial (Mô phỏng App IoT)**: In ra cảnh báo nếu nhiệt độ quá cao, hoặc cạn nước.
+
+## User Review Required
+> [!IMPORTANT]
+> - Các cảm biến độ ẩm đất và mực nước sẽ được giả lập bằng **Biến trở (Potentiometer)** trong Wokwi vì Wokwi không có linh kiện cảm biến nước chuyên dụng. Bạn kéo thanh trượt trên biến trở để mô phỏng sự thay đổi.
+> - Cảm biến ánh sáng sẽ dùng Photoresistor có sẵn của Wokwi.
+> 
+> Nếu bạn đồng ý với kế hoạch thiết kế này, hãy xác nhận để tôi tiến hành viết code và thiết lập sơ đồ Wokwi cho bạn!

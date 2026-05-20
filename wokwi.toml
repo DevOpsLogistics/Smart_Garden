@@ -1,0 +1,12 @@
+[wokwi]
+version = 1
+elf = ".pio/build/esp32/firmware.elf"
+firmware = ".pio/build/esp32/firmware.bin"
+
+[[net.forward]]
+port = 80
+hostPort = 8080
+
+[[net.forward]]
+port = 81
+hostPort = 8081
